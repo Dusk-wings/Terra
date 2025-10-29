@@ -33,16 +33,43 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const url = request.nextUrl.clone();
+  // if (request.nextUrl.pathname == "/authentication") {
+  //   url.pathname = "/authentication/register";
+  //   return NextResponse.redirect(url);
+  // }
+
+  if (user && request.nextUrl.pathname.startsWith("/authentication")) {
+    url.pathname = "/account";
+    return NextResponse.redirect(url);
+  }
+
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/authentication") &&
-    !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/error")
   ) {
-    const url = request.nextUrl.clone();
     url.pathname = "/authentication";
     return NextResponse.redirect(url);
   }
+
+  // if (
+  //   user &&
+  //   request.nextUrl.pathname.startsWith("/authentication/verification")
+  // ) {
+  //   const token = url.searchParams.get("token");
+  //   if (!token || !(await checkToken(user.id, token))) {
+  //     return NextResponse.redirect(new URL("/authentication", request.url));
+  //   }
+
+  //   return NextResponse.next();
+  // }
+
+  // if (user && !user.email_confirmed_at) {
+  //   const token = await createToken(user.id);
+  //   url.pathname = `/authentication/verification/${token}`;
+  //   return NextResponse.redirect(url);
+  // }
 
   return supabaseResponse;
 }
