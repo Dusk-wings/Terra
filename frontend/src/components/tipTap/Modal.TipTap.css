@@ -1,0 +1,109 @@
+/* Modal.TipTap.css */
+
+/* Tab Trigger Styles */
+.tab-trigger {
+  background-color: #0a0a0a;
+  color: white;
+}
+
+.tab-trigger[data-state="active"] {
+  background-color: #404040; /* Active state color */
+  color: white; /* Active text color */
+}
+
+/* Custom active state */
+.is-active {
+  background-color: #000000; /* Equivalent of bg-zinc-900 */
+}
+
+/* Basic Editor Styles */
+a {
+  text-decoration: underline;
+  color: dodgerblue;
+  font-style: italic;
+  /* font-weight: 00; */
+}
+
+code {
+  background: none;
+  color: inherit;
+  font-size: 0.8rem;
+  padding: 0;
+}
+
+pre {
+  border-radius: 0.5rem;
+  font-family: "JetBrainsMono", monospace;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #1f1f1f; /* Equivalent to bg-neutral-900 */
+  color: white;
+}
+
+/* Code Styling */
+.hljs-comment,
+.hljs-quote {
+  color: #616161; /* Gray color for comments and quotes */
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attribute,
+.hljs-tag,
+.hljs-regexp,
+.hljs-link,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #f98181; /* Light red-pink color */
+}
+
+.hljs-number,
+.hljs-meta,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params {
+  color: #fbbc88; /* Light orange color */
+}
+
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet {
+  color: #b9f18d; /* Light green color */
+}
+
+.hljs-title,
+.hljs-section {
+  color: #faf594; /* Light yellow color */
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #70cff8; /* Light blue color */
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700; /* Bold */
+}
+
+/* Blockquote Styling */
+blockquote {
+  border-left: 3px solid gray;
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  text-align: left;
+}
+
+button {
+  cursor: pointer;
+}
+
+.tiptap:focus {
+  outline: none;
+}

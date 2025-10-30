@@ -1,0 +1,16 @@
+@tailwind utilities;
+@reference "tailwindcss";
+
+@layer components {
+  .accordion-text {
+    @apply text-xs text-justify;
+  }
+
+  .accordion-label {
+    @apply text-sm font-semibold;
+  }
+
+  .accordion-content {
+    @apply flex gap-2 flex-col w-11/12 mx-auto;
+  }
+}
