@@ -47,6 +47,7 @@ function AuthenticationFrom({ ...props }: React.ComponentProps<typeof Card>) {
       if (error) {
         console.error("Sign-in error:", error);
         // optionally show UI error
+        localStorage.removeItem("authentication-in-progress");
         setIsNavigating(false);
       }
       // if redirect occurs, user leaves the page; otherwise you'll remain and should reset state when needed
