@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import PopUpStateManager from "@/components/popUpManager/popUpStateManger";
+import ReduxWrapper from "@/components/reduxWrapper/ReduxWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${outFit.variable} ${geistMono.variable} antialiased dark`}
       >
-        <PopUpStateManager />
+        <ReduxWrapper>
+          <PopUpStateManager />
+        </ReduxWrapper>
         {children}
       </body>
     </html>

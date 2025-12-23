@@ -12,6 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import ProjectSelector from "./project-selector";
 import { Separator } from "./ui/separator";
+import ReduxWrapper from "./reduxWrapper/ReduxWrapper";
 
 const projects = [
   { id: "12312", name: "Tech Fest" },
@@ -43,16 +44,18 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          <ProjectSelector
-            initialValue={projects[0].name}
-            initialProjectId={projects[0].id}
-            projects={projects}
-          />
+          <ReduxWrapper>
+            <ProjectSelector
+              initialValue={projects[0].name}
+              initialProjectId={projects[0].id}
+              projects={projects}
+            />
+          </ReduxWrapper>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               tooltip="Quick Create"
               className="border cursor-pointer hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-              variant='outline'
+              variant="outline"
             >
               <IconCirclePlusFilled />
               <span>Create Page</span>
