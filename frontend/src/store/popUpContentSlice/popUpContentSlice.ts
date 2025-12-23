@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type PopUpActionType =
   | "CREATE_PROJECT"
@@ -13,6 +13,7 @@ interface PopUpContentState {
   message: string;
   isVisible: boolean;
   type: PopUpActionType;
+  isActionable: boolean;
 }
 
 const initialState: PopUpContentState = {
@@ -20,17 +21,9 @@ const initialState: PopUpContentState = {
   message: "",
   isVisible: false,
   type: null,
+  isActionable: false,
 };
 
-const createProject = createAsyncThunk(
-  "popUpContent/createProject",
-  async (projectData: { name: string; description: string }) => {}
-);
-
-const deleteProject = createAsyncThunk(
-  "popUpContent/deleteProject",
-  async (projectData: { name: string; description: string }) => {}
-);
 
 const popUpContentSlice = createSlice({
   name: "popUpContent",
@@ -42,16 +35,21 @@ const popUpContentSlice = createSlice({
         title: string;
         message: string;
         type: PopUpActionType;
+        isActionable: boolean;
       }>
     ) => {
       state.title = action.payload.title;
       state.message = action.payload.message;
       state.isVisible = true;
+      state.isActionable = action.payload.isActionable;
       state.type = action.payload.type;
     },
     hidePopUp: (state) => {
       state.isVisible = false;
       state.type = null;
+      state.isActionable = false;
+      state.title = "";
+      state.message = "";
     },
   },
 });

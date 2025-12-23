@@ -12,6 +12,9 @@ import {
 import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import { IconFolderPlus } from "@tabler/icons-react";
 import { Button } from "./ui/button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { showPopUp } from "@/store/popUpContentSlice/popUpContentSlice";
 
 interface Props {
   initialValue?: string;
@@ -20,10 +23,21 @@ interface Props {
 }
 
 function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+  const createProject = () => {
+    dispatch(
+      showPopUp({
+        title: "Create New Project",
+        message: "Fill in the details to create a new project.",
+        type: "CREATE_PROJECT",
+        isActionable: true,
+      })
+    );
+  };
+
 
   return (
     <div>
-      
       {projects && projects.length > 0 ? (
         <SidebarMenuItem className="grid grid-cols-6 items-center gap-2">
           <Select>
@@ -51,6 +65,7 @@ function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
             title="Create Project"
             className="size-8 group-data-[collapsible=icon]:opacity-0 justify-self-end w-full h-full"
             variant="outline"
+            onClick={createProject}
           >
             <IconFolderPlus />
           </Button>
@@ -59,6 +74,7 @@ function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
         <SidebarMenuButton
           tooltip="Quick Create"
           className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+          onClick={createProject}
         >
           <IconFolderPlus />
           <span>Create Project</span>

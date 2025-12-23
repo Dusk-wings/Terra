@@ -1,5 +1,10 @@
+"use client";
 import { IconX } from "@tabler/icons-react";
 import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store/store";
+import { hidePopUp } from "../../store/popUpContentSlice/popUpContentSlice";
+import { Button } from "../ui/button";
 
 interface Props {
   open: boolean;
@@ -9,7 +14,7 @@ interface Props {
   actionText?: string;
   popUpHeading: string;
   popUpDescription: string;
-  changeOpenState: (open: boolean) => void;
+  // changeOpenState: (open: boolean) => void;
 }
 
 function PopUpWindow({
@@ -20,16 +25,17 @@ function PopUpWindow({
   actionText,
   popUpDescription,
   popUpHeading,
-  changeOpenState,
-}: Props) {
+}: // changeOpenState,
+Props) {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const closeDialog = useCallback(() => {
     if (dialogRef.current) {
       dialogRef.current.close();
-      changeOpenState(false);
+      dispatch(hidePopUp());
     }
-  }, [changeOpenState]);
+  }, [dispatch]);
 
   const handelClickOutside = (
     event: React.MouseEvent<HTMLDialogElement, MouseEvent>
@@ -68,19 +74,21 @@ function PopUpWindow({
         <div id="content">{children}</div>
         <div id="button-section" className="mt-4">
           {isActionable && actionFunction && (
-            <button
-              className="px-4 py-2 bg-green-500 text-white rounded"
+            <Button
+              variant="default"
+              className="px-4 py-2"
               onClick={actionFunction}
             >
               {actionText || "Take Action"}
-            </button>
+            </Button>
           )}
-          <button
-            className="ml-2 px-4 py-2 bg-red-500 text-white rounded"
+          <Button
+            variant="destructive"
+            className="px-4 py-2"
             onClick={closeDialog}
           >
             Close
-          </button>
+          </Button>
         </div>
       </div>
     </dialog>
