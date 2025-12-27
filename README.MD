@@ -1,4 +1,5 @@
 # Terra
+> 🚧 Terra is in active early development.  
 
 ## Overview
 **Terra** is a collaborative content management system inspired by platforms like Blogger.  
