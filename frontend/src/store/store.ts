@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import PopUpWindowReducer from "./popUpContentSlice/popUpContentSlice";
+import ProjectReducer from "./projectSlice/projectSlice";
 
 export const store = configureStore({
   reducer: {
     popUpContent: PopUpWindowReducer,
+    project: ProjectReducer,
   },
 });
 

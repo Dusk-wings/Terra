@@ -6,6 +6,7 @@ type PopUpActionType =
   | "INFO"
   | "WARNING"
   | "ERROR"
+  | "REDIRECT_PROJECT"
   | null;
 
 interface PopUpContentState {
@@ -14,6 +15,7 @@ interface PopUpContentState {
   isVisible: boolean;
   type: PopUpActionType;
   isActionable: boolean;
+  redirect_path?: string | null;
 }
 
 const initialState: PopUpContentState = {
@@ -22,8 +24,8 @@ const initialState: PopUpContentState = {
   isVisible: false,
   type: null,
   isActionable: false,
+  redirect_path: null,
 };
-
 
 const popUpContentSlice = createSlice({
   name: "popUpContent",
@@ -36,6 +38,7 @@ const popUpContentSlice = createSlice({
         message: string;
         type: PopUpActionType;
         isActionable: boolean;
+        redirect_path?: string | null;
       }>
     ) => {
       state.title = action.payload.title;
@@ -43,6 +46,9 @@ const popUpContentSlice = createSlice({
       state.isVisible = true;
       state.isActionable = action.payload.isActionable;
       state.type = action.payload.type;
+      state.redirect_path = action.payload.redirect_path
+        ? action.payload.redirect_path
+        : null;
     },
     hidePopUp: (state) => {
       state.isVisible = false;
@@ -50,6 +56,7 @@ const popUpContentSlice = createSlice({
       state.isActionable = false;
       state.title = "";
       state.message = "";
+      state.redirect_path = null;
     },
   },
 });

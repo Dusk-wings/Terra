@@ -12,17 +12,21 @@ import {
 import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import { IconFolderPlus } from "@tabler/icons-react";
 import { Button } from "./ui/button";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import { showPopUp } from "@/store/popUpContentSlice/popUpContentSlice";
 
 interface Props {
   initialValue?: string;
   initialProjectId?: string;
-  projects?: { id: string; name: string }[];
+  projectLoading?: boolean;
 }
 
-function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
+function ProjectSelector({
+  initialValue,
+  initialProjectId,
+  projectLoading,
+}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const createProject = () => {
     dispatch(
@@ -35,10 +39,18 @@ function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
     );
   };
 
+  const projects = useSelector((state: RootState) => state.project.projects);
+  const isProjectLoading = useSelector((state: RootState) => state.project.loading);
+  const loadingError = useSelector((state: RootState) => state.project.error);
 
   return (
     <div>
-      {projects && projects.length > 0 ? (
+      {projectLoading || isProjectLoading || loadingError ? (
+        <SidebarMenuItem className="flex gap-2">
+          <div className="bg-secondary/80 w-4/5 animate-pulse h-8 rounded-md"></div>
+          <div className="bg-secondary/80 w-1/5 animate-pulse h-8 rounded-md"></div>
+        </SidebarMenuItem>
+      ) : projects && projects.length > 0 ? (
         <SidebarMenuItem className="grid grid-cols-6 items-center gap-2">
           <Select>
             <SelectTrigger className="w-full col-span-5 truncate min-w-0">
@@ -51,11 +63,11 @@ function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
                 <SelectLabel>Project</SelectLabel>
                 {projects.map((item) => (
                   <SelectItem
-                    key={item.id}
-                    value={item.id}
-                    defaultChecked={initialProjectId == item.id}
+                    key={item.project_id}
+                    value={item.project_id}
+                    defaultChecked={initialProjectId == item.project_id}
                   >
-                    {item.name}
+                    {item.project_name}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -73,7 +85,7 @@ function ProjectSelector({ initialValue, projects, initialProjectId }: Props) {
       ) : (
         <SidebarMenuButton
           tooltip="Quick Create"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+          className="bg-primary/90  hover:bg-primary/70  active:bg-primary/70 active:text-primary-foreground min-w-8 duration-200 ease-linear cursor-pointer text-zinc-900/90 hover:text-zinc-900 w-full"
           onClick={createProject}
         >
           <IconFolderPlus />

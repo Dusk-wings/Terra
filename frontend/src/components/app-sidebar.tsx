@@ -15,7 +15,7 @@ import {
   IconSettings,
   IconUsers,
   IconSpeakerphone,
-  IconCoin
+  IconCoin,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -34,6 +34,7 @@ import {
 import Image from "next/image";
 import Logo from "../../public/tera-logo.png";
 import { Separator } from "./ui/separator";
+import ReduxWrapper from "./reduxWrapper/ReduxWrapper";
 // import {  CircleDollarSign, Megaphone } from "lucide-react";
 
 interface Props extends React.ComponentProps<typeof Sidebar> {
@@ -197,7 +198,9 @@ export function AppSidebar({ user, ...props }: Props) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="scroll-container-vertical">
-        <NavMain items={data.navMain} />
+        <ReduxWrapper>
+          <NavMain items={data.navMain} />
+        </ReduxWrapper>
         <Separator />
         <NavDocuments items={data.documents} />
         <Separator />

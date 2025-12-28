@@ -12,13 +12,8 @@ import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import ProjectSelector from "./project-selector";
 import { Separator } from "./ui/separator";
-import ReduxWrapper from "./reduxWrapper/ReduxWrapper";
-
-const projects = [
-  { id: "12312", name: "Tech Fest" },
-  { id: "43235", name: "Personal Well-Being" },
-  { id: "92433", name: "Personal Well-Being and digital atiquacy" },
-];
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export function NavMain({
   items,
@@ -40,26 +35,48 @@ export function NavMain({
     }
   }, [pathName]);
 
+  const [projectDataLoading, setProjectDataLoading] = React.useState(true);
+  const [projectDetails, setProjectDetails] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    const storedData = localStorage.getItem("project_details");
+    setProjectDataLoading(true);
+    if (storedData) {
+      try {
+        const data: { id: string; name: string } = JSON.parse(storedData);
+        setProjectDetails(data);
+      } catch (error) {
+        console.error("Failed to parse project_details:", error);
+      }
+    }
+    setProjectDataLoading(false);
+  }, []);
+
+  const projects = useSelector((state: RootState) => state.project.projects);
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          <ReduxWrapper>
-            <ProjectSelector
-              initialValue={projects[0].name}
-              initialProjectId={projects[0].id}
-              projects={projects}
-            />
-          </ReduxWrapper>
+          <ProjectSelector
+            initialValue={projectDetails?.name}
+            initialProjectId={projectDetails?.id}
+            projectLoading={projectDataLoading}
+          />
           <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
-              tooltip="Quick Create"
-              className="border cursor-pointer hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-              variant="outline"
-            >
-              <IconCirclePlusFilled />
-              <span>Create Page</span>
-            </SidebarMenuButton>
+            {projects.length > 0 && (
+              <SidebarMenuButton
+                tooltip="Quick Create"
+                className="border cursor-pointer hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+                variant="outline"
+              >
+                <IconCirclePlusFilled />
+                <span>Create Page</span>
+              </SidebarMenuButton>
+            )}
             {/* <Button
               size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"

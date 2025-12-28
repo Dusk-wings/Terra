@@ -38,8 +38,6 @@ function Avatar({ src = null, alt = null, email, userName }: Props) {
     Z: "bg-gradient-to-r from-fuchsia-800 to-rose-700 text-white",
   };
 
-  console.log(email);
-
   const key =
     userName && userName != ""
       ? userName.charAt(0).toLocaleUpperCase()
