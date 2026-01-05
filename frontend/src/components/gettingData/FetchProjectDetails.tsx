@@ -2,7 +2,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { fetchProjectData } from "@/store/projectSlice/projectSlice";
+import {
+  fetchCompleteProjectDetails,
+  fetchProjectData,
+} from "@/store/projectSlice/projectSlice";
 import { showPopUp } from "@/store/popUpContentSlice/popUpContentSlice";
 
 function FetchProjectDetails() {
@@ -12,6 +15,7 @@ function FetchProjectDetails() {
 
   React.useEffect(() => {
     dispatch(fetchProjectData());
+    dispatch(fetchCompleteProjectDetails());
   }, [dispatch]);
 
   React.useEffect(() => {

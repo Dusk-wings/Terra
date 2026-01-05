@@ -2,11 +2,8 @@
 
 import * as React from "react";
 import {
-  IconCamera,
   IconDashboard,
   IconDatabase,
-  IconFileAi,
-  IconFileDescription,
   IconFileWord,
   IconFolder,
   IconListDetails,
@@ -16,6 +13,8 @@ import {
   IconUsers,
   IconSpeakerphone,
   IconCoin,
+  IconChartBar,
+  IconInbox,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -35,6 +34,7 @@ import Image from "next/image";
 import Logo from "../../public/tera-logo.png";
 import { Separator } from "./ui/separator";
 import ReduxWrapper from "./reduxWrapper/ReduxWrapper";
+import { usePathname } from "next/navigation";
 // import {  CircleDollarSign, Megaphone } from "lucide-react";
 
 interface Props extends React.ComponentProps<typeof Sidebar> {
@@ -42,11 +42,6 @@ interface Props extends React.ComponentProps<typeof Sidebar> {
 }
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -77,54 +72,6 @@ const data = {
       title: "Monetization",
       url: "/dashboard/projects",
       icon: IconCoin,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
@@ -173,7 +120,78 @@ const data = {
   ],
 };
 
+const dashboardContent = {
+  navMain: [
+    {
+      title: "Projects",
+      url: "/dashboard/project",
+      icon: IconFolder,
+    },
+    {
+      title: "Project Invite",
+      url: "/dashboard/invite",
+      icon: IconInbox,
+    },
+    {
+      title: "Analytics",
+      url: "/dashboard/analytics",
+      icon: IconChartBar,
+    },
+    {
+      title: "Search",
+      url: "/dashboard/search",
+      icon: IconSearch,
+    },
+  ],
+  navSecondary: [
+    {
+      title: "Advertisement",
+      url: "#",
+      icon: IconSpeakerphone,
+    },
+    {
+      title: "Advertisement Billing",
+      url: "#",
+      icon: IconCoin,
+    },
+    // {
+    //   title: "Get Help",
+    //   url: "#",
+    //   icon: IconHelp,
+    // },
+    // {
+    //   title: "Search",
+    //   url: "#",
+    //   icon: IconSearch,
+    // },
+  ],
+  documents: [
+    {
+      name: "Data Library",
+      url: "#",
+      icon: IconDatabase,
+    },
+    {
+      name: "Reports",
+      url: "#",
+      icon: IconReport,
+    },
+    {
+      name: "Word Assistant",
+      url: "#",
+      icon: IconFileWord,
+    },
+    {
+      name: "AI Insights",
+      url: "#",
+      icon: IconFileWord,
+    },
+  ],
+};
+
 export function AppSidebar({ user, ...props }: Props) {
+  const pathName = usePathname();
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -199,12 +217,29 @@ export function AppSidebar({ user, ...props }: Props) {
       </SidebarHeader>
       <SidebarContent className="scroll-container-vertical">
         <ReduxWrapper>
-          <NavMain items={data.navMain} />
+          <NavMain
+            items={
+              pathName.includes("/dashboard/project/")
+                ? data.navMain
+                : dashboardContent.navMain
+            }
+          />
+          <Separator />
+          <NavDocuments
+            type={
+              pathName.includes("/dashboard/project/") ? "Page" : "Projects"
+            }
+          />
         </ReduxWrapper>
         <Separator />
-        <NavDocuments items={data.documents} />
-        <Separator />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary
+          items={
+            pathName.includes("/dashboard/project/")
+              ? data.navSecondary
+              : dashboardContent.navSecondary
+          }
+          className="mt-auto"
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

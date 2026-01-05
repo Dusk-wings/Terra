@@ -2,6 +2,11 @@ import { NextRequest } from "next/server";
 import { updateSession } from "./utils/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname == "/dashboard") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard/project";
+    return Response.redirect(url);
+  }
   return await updateSession(request);
 }
 

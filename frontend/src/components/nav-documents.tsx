@@ -5,7 +5,6 @@ import {
   IconFolder,
   IconShare3,
   IconTrash,
-  type Icon,
 } from "@tabler/icons-react";
 
 import {
@@ -24,64 +23,88 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Dock } from "lucide-react";
+import { Blocks, Dock } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import React from "react";
+import { showPopUp } from "@/store/popUpContentSlice/popUpContentSlice";
 
-export function NavDocuments({
-  items,
-}: {
-  items: {
-    name: string;
-    url: string;
-    icon: Icon;
-  }[];
-}) {
+export function NavDocuments({ type }: { type: "Projects" | "Page" }) {
   const { isMobile } = useSidebar();
+
+  const projectData = useSelector((state: RootState) => state.project);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (projectData.error) {
+      dispatch(
+        showPopUp({
+          title: "Error",
+          message: "Unable to load recent updates. Please try again later.",
+          type: "ERROR",
+          isActionable: false,
+        })
+      );
+    }
+  }, [dispatch, projectData.error]);
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Recents Updates</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <Dock />
-                <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction
-                  showOnHover
-                  className="data-[state=open]:bg-accent rounded-sm cursor-pointer"
-                  title="More"
+        {projectData.loading ? (
+          <div className="w-full flex flex-col gap-2">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <SidebarMenuItem key={index} className="animate-pulse">
+                <SidebarMenuButton asChild>
+                  <div className="h-4 w-20 rounded-md bg-secondary/80" />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </div>
+        ) : (
+          projectData.projects.map((item) => (
+            <SidebarMenuItem key={item.project_id}>
+              <SidebarMenuButton asChild>
+                <a href={`/dashboard/project/${item.project_id}`}>
+                  {type == "Projects" ? <Blocks /> : <Dock />}
+                  <span>{item.project_name}</span>
+                </a>
+              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuAction
+                    showOnHover
+                    className="data-[state=open]:bg-accent rounded-sm cursor-pointer"
+                    title="More"
+                  >
+                    <IconDots />
+                    <span className="sr-only">More</span>
+                  </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-24 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
+                  align={isMobile ? "end" : "start"}
                 >
-                  <IconDots />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-24 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem>
-                  <IconFolder />
-                  <span>Open</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconShare3 />
-                  <span>Share</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  <IconTrash />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        ))}
+                  <DropdownMenuItem>
+                    <IconFolder />
+                    <span>Open</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <IconShare3 />
+                    <span>Share</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive">
+                    <IconTrash />
+                    <span>Delete</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          ))
+        )}
         {/* <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <IconDots className="text-sidebar-foreground/70" />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,22 +18,22 @@ function AuthenticationFrom({ ...props }: React.ComponentProps<typeof Card>) {
   const [isNavigating, setIsNavigating] = useState(false);
   const [authType, setAuthType] = useState<AUTH_TYPE>(null);
 
-  const [isBlocked, setIsBlocked] = useState(true);
-  useEffect(
-    () =>
-      localStorage.getItem("authentication-in-progress")
-        ? setIsBlocked(true)
-        : setIsBlocked(false),
-    []
-  );
+  // const [isBlocked, setIsBlocked] = useState(true);
+  // useEffect(
+  //   () =>
+  //     localStorage.getItem("authentication-in-progress")
+  //       ? setIsBlocked(true)
+  //       : setIsBlocked(false),
+  //   []
+  // );
 
   const handelOAuth = async (authType: AUTH_TYPE) => {
     if (authType == null || isNavigating) return;
-    if (localStorage.getItem("authentication-in-progress")) return;
+    // if (localStorage.getItem("authentication-in-progress")) return;
     try {
       setIsNavigating(true);
       setAuthType(authType);
-      localStorage.setItem("authentication-in-progress", "true");
+      // localStorage.setItem("authentication-in-progress", "true");
       // console.log(window.location.origin);
 
       const { error } = await supabaseBrowser.auth.signInWithOAuth({
@@ -47,13 +47,13 @@ function AuthenticationFrom({ ...props }: React.ComponentProps<typeof Card>) {
       if (error) {
         console.error("Sign-in error:", error);
         // optionally show UI error
-        localStorage.removeItem("authentication-in-progress");
+        // localStorage.removeItem("authentication-in-progress");
         setIsNavigating(false);
       }
       // if redirect occurs, user leaves the page; otherwise you'll remain and should reset state when needed
     } catch (err) {
       console.error("Unexpected error during signin:", err);
-      localStorage.removeItem("authentication-in-progress");
+      // localStorage.removeItem("authentication-in-progress");
       setIsNavigating(false);
     }
   };
@@ -73,7 +73,7 @@ function AuthenticationFrom({ ...props }: React.ComponentProps<typeof Card>) {
               variant="outline"
               type="button"
               onClick={() => handelOAuth("github")}
-              disabled={isNavigating || isBlocked}
+              disabled={isNavigating}
               className={`flex items-center justify-center gap-2 w-full disabled:bg-zinc-800 cursor-pointer disabled:cursor-not-allowed`}
             >
               {isNavigating && authType == "github" && (
@@ -97,7 +97,7 @@ function AuthenticationFrom({ ...props }: React.ComponentProps<typeof Card>) {
               variant="outline"
               type="button"
               onClick={() => handelOAuth("google")}
-              disabled={isNavigating || isBlocked}
+              disabled={isNavigating}
               className={`flex items-center justify-center gap-2 w-full disabled:bg-zinc-800 cursor-pointer disabled:cursor-not-allowed`}
             >
               {isNavigating && authType == "google" && (

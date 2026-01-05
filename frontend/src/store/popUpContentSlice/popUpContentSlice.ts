@@ -7,6 +7,8 @@ type PopUpActionType =
   | "WARNING"
   | "ERROR"
   | "REDIRECT_PROJECT"
+  | "PROJECT_LOAD_ERROR"
+  | "SEARCH_PROJECT"
   | null;
 
 interface PopUpContentState {

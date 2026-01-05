@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import PopUpWindow from "../popUpWindow/pop-up";
 import ProjectCreationForm from "../project-creation-from";
 import { useRouter } from "next/navigation";
 import { hidePopUp } from "@/store/popUpContentSlice/popUpContentSlice";
+import { fetchCompleteProjectDetails } from "@/store/projectSlice/projectSlice";
+import SearchForm from "../search-form";
 
 function PopUpStateManager() {
   const popUpContent = useSelector((state: RootState) => state.popUpContent);
@@ -14,6 +16,20 @@ function PopUpStateManager() {
     React.useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
+  const projectLoading = useSelector(
+    (state: RootState) => state.project.projectsLoading
+  );
+  const [retrying, setRetrying] = useState(false);
+
+  React.useEffect(() => {
+    if (retrying) {
+      if (!projectLoading) {
+        setIsPreformingAction(false);
+        setRetrying(false);
+        dispatch(hidePopUp());
+      }
+    }
+  }, [retrying, projectLoading, dispatch]);
 
   React.useEffect(() => {
     switch (popUpContent.type) {
@@ -25,6 +41,9 @@ function PopUpStateManager() {
         break;
       case "REDIRECT_PROJECT":
         setActionText("Proceed");
+        break;
+      case "PROJECT_LOAD_ERROR":
+        setActionText("Retry");
         break;
       default:
         setActionText("Take Action");
@@ -42,6 +61,10 @@ function PopUpStateManager() {
         setIsPreformingAction(false);
         dispatch(hidePopUp());
       }
+    } else if (popUpContent.type == "PROJECT_LOAD_ERROR") {
+      setIsPreformingAction(true);
+      dispatch(fetchCompleteProjectDetails());
+      setRetrying(true);
     }
   };
 
@@ -60,6 +83,11 @@ function PopUpStateManager() {
           {popUpContent.type === "CREATE_PROJECT" ? (
             <ProjectCreationForm
               setIsPreformingAction={setIsPreformingAction}
+            />
+          ) : popUpContent.type == "SEARCH_PROJECT" ? (
+            <SearchForm
+              placeholder="Search for projects"
+              searchContainerText="Searched projects will be shown here"
             />
           ) : null}
         </PopUpWindow>

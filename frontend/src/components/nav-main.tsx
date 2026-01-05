@@ -56,6 +56,7 @@ export function NavMain({
   }, []);
 
   const projects = useSelector((state: RootState) => state.project.projects);
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -67,16 +68,17 @@ export function NavMain({
             projectLoading={projectDataLoading}
           />
           <SidebarMenuItem className="flex items-center gap-2">
-            {projects.length > 0 && (
-              <SidebarMenuButton
-                tooltip="Quick Create"
-                className="border cursor-pointer hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-                variant="outline"
-              >
-                <IconCirclePlusFilled />
-                <span>Create Page</span>
-              </SidebarMenuButton>
-            )}
+            {projects.length > 0 &&
+              pathname.includes("/dashboard/project/") && (
+                <SidebarMenuButton
+                  tooltip="Quick Create"
+                  className="border cursor-pointer hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+                  variant="outline"
+                >
+                  <IconCirclePlusFilled />
+                  <span>Create Page</span>
+                </SidebarMenuButton>
+              )}
             {/* <Button
               size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"

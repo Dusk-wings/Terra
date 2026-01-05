@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { showPopUp } from "@/store/popUpContentSlice/popUpContentSlice";
+import { usePathname } from "next/navigation";
 
 interface Props {
   initialValue?: string;
@@ -39,8 +40,12 @@ function ProjectSelector({
     );
   };
 
+  const pathName = usePathname();
+
   const projects = useSelector((state: RootState) => state.project.projects);
-  const isProjectLoading = useSelector((state: RootState) => state.project.loading);
+  const isProjectLoading = useSelector(
+    (state: RootState) => state.project.loading
+  );
   const loadingError = useSelector((state: RootState) => state.project.error);
 
   return (
@@ -50,7 +55,9 @@ function ProjectSelector({
           <div className="bg-secondary/80 w-4/5 animate-pulse h-8 rounded-md"></div>
           <div className="bg-secondary/80 w-1/5 animate-pulse h-8 rounded-md"></div>
         </SidebarMenuItem>
-      ) : projects && projects.length > 0 ? (
+      ) : projects &&
+        projects.length > 0 &&
+        pathName.includes("/dashboard/project/") ? (
         <SidebarMenuItem className="grid grid-cols-6 items-center gap-2">
           <Select>
             <SelectTrigger className="w-full col-span-5 truncate min-w-0">
